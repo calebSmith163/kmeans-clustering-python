@@ -16,15 +16,17 @@ Example: python kmeans.py 3 input.txt
 
 Outputs to console:
 Raw list of data points as read from file. (Once)
+List of data points in random order. (Once)
 List of data points in each cluster upon first assignment to a cluster. (Once)
 List of centroids of each cluster. (After each iteration)
 List of data points assigned to each cluster according to distance. (After each iteration)
 Final list of data points and their cluster assignments. (Once)
 
-Final list of data points and their cluster assignments will be written to text file "output.txt".
+Each iteration will be output to a text file, entitled "output[iteration_number].txt"
+Final list of data points and their cluster assignments will be written to text file "final_clusters.txt".
 
 """
-
+outnum = 1
 
 def random_assignment(point_list, k):
 
@@ -38,12 +40,6 @@ def random_assignment(point_list, k):
    Returns a 2-dimensional list of clusters of data points (integers).
 
    """
-
-   #Shiffle list of points
-   random.shuffle(point_list)
-
-   #print "\n-----Points in random order-----\n"
-   #print point_list
 
    i = 0
    clusters = [[] for i in range(k)]
@@ -108,8 +104,8 @@ def assign_closest(point_list, centroids, k):
 k = int(sys.argv[1])
 input_file_name = sys.argv[2]
 input_file = open(input_file_name, "r")
-output_file = open("output.txt", "w")
 raw_data = input_file.readlines()
+input_file.close()
 point_list = []
 for point in raw_data:
    point_list.append(map(int, point.split()))
@@ -121,7 +117,11 @@ while (k > len(point_list)) or (k < 1):
 print "\n-----Raw list of points-----\n"
 print point_list
    
+#Shiffle list of points
+random.shuffle(point_list)
 
+print "\n-----Points in random order-----\n"
+print point_list
 
 #Assign points to clusters
 clusters = random_assignment(point_list, k)
@@ -132,6 +132,18 @@ for cluster in clusters:
 
 centroids = [[] for i in range(k)]
 while True:
+
+   output_file = open("output" + str(outnum) +".txt", "w")
+
+   for i in range(0, k):
+      for j in range(0, len(clusters[i])):
+         print (str(clusters[i][j][0]) + " " + \
+                str(clusters[i][j][1]) + " " + \
+                str(i+1) + "\n")
+         output_file.write(str(clusters[i][j][0]) + " " + \
+                           str(clusters[i][j][1]) + " " + \
+                           str(i+1) + "\n")
+   output_file.close()
 
    #Find centroids for clusters
 
@@ -163,7 +175,10 @@ while True:
    else:
       clusters = new_clusters
 
+   outnum = outnum+1
+
 #Output final clusters
+output_file = open("final_clusters.txt", "w")
 print "\n-----Final list of points by cluster-----\n"
 for i in range(0, k):
    for j in range(0, len(clusters[i])):
@@ -175,4 +190,3 @@ for i in range(0, k):
                         str(i+1) + "\n")
 
 output_file.close()
-
