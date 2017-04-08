@@ -26,7 +26,7 @@ Each iteration will be output to a text file, entitled "output[iteration_number]
 Final list of data points and their cluster assignments will be written to text file "final_clusters.txt".
 
 """
-outnum = 1
+
 
 def random_assignment(point_list, k):
 
@@ -131,6 +131,7 @@ for cluster in clusters:
    print '\n'
 
 centroids = [[] for i in range(k)]
+outnum = 1
 while True:
 
    output_file = open("output" + str(outnum) +".txt", "w")
